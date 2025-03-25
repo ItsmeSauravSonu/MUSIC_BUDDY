@@ -1,0 +1,98 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 20px;
+    background-color: #f4f4f4; /* Light background for better contrast */
+}
+
+h1, h2 {
+    color: #333;
+}
+
+form {
+    margin: 20px 0;
+}
+
+input {
+    margin: 5px;
+    padding: 10px;
+    width: 200px;
+}
+
+button {
+    padding: 10px 15px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px; /* Rounded corners for buttons */
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+ul li {
+    margin: 10px 0;
+}
+
+/* Chat Room Styles */
+#chat-box {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    height: 200px;
+    overflow-y: scroll;
+    padding: 10px;
+    background-color: #fff; /* White background for chat box */
+    margin-bottom: 10px;
+}
+
+#messages {
+    max-height: 180px; /* Keep some space for the input */
+    overflow-y: auto;
+}
+
+#message-input {
+    width: calc(100% - 90px); /* Adjust width to fit the button */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 5px;
+}
+
+#send-button {
+    padding: 10px 15px;
+    background-color: #28a745; /* Green color for send button */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#send-button:hover {
+    background-color: #218838; /* Darker green on hover */
+}
+
+/* Message Styles */
+.message {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    background-color: #f0f0f0; /* Light gray background for messages */
+}
+
+.message .username {
+    font-weight: bold;
+    color: #007BFF; /* Blue color for usernames */
+}
+
+.message .timestamp {
+    font-size: 12px;
+    color: #666; /* Dark gray color for timestamps */
+}

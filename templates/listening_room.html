@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listening Room</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Welcome to the Listening Room</h1>
+    <p>You are logged in as {{ current_user.username }}</p>
+    <a href="{{ url_for('logout') }}">Logout</a>
+
+    <h2>Upload a Song</h2>
+    <form method="POST" enctype="multipart/form-data">
+        <input type="file" name="file" accept="audio/*" required>
+        <button type="submit">Upload</button>
+    </form>
+
+    <h2>Available Songs</h2>
+    <ul id="song-list">
+        {% for song in songs %}
+            <li>
+                <button class="play-button" data-song="{{ song }}">{{ song }}</button>
+            </li>
+        {% endfor %}
+    </ul>
+    <audio id="audio-player" controls></audio>
+
+    <h2>Chat Room</h2>
+    <div id="chat-box">
+        <div id="messages"></div>
+    </div>
+    <input type="text" id="message-input" placeholder="Type your message here...">
+    <button id="send-button">Send</button>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
+    <script>
+        const socket = io();  // Connect to the Socket.IO server
+
+        document.querySelectorAll('.play-button').forEach(button => {
+            button.addEventListener('click', () => {
+                const song = button.getAttribute('data-song');
+                const audioPlayer = document.getElementById('audio-player');
+                audioPlayer.src = `/static/songs/${song}`;
+                audioPlayer.play().catch(error => {
+                    console.error("Error playing audio:", error);
+                });
+                socket.emit('play_song', song);  // Emit the play_song event
+            });
+        });
+
+        // Listen for play_song events from the server
+        socket.on('play_song', (song) => {
+            const audioPlayer = document.getElementById('audio-player');
+            audioPlayer.src = `/static/songs/${song}`;
+            audioPlayer.play().catch(error => {
+                console.error("Error playing audio:", error);
+            });
+        });
+
+        // Chat functionality
+        document.getElementById('send-button').onclick = function() {
+            const message = document.getElementById('message-input').value;
+            const username = '{{ current_user.username }}';
+            const timestamp = new Date().toLocaleTimeString();
+            socket.emit('send_message', {'message': message, 'username': username, 'timestamp': timestamp});
+            document.getElementById('message-input').value = '';  // Clear input field
+        };
+
+        // Listen for incoming chat messages
+        socket.on('receive_message', (data) => {
+            const messagesDiv = document.getElementById('messages');
+            const newMessage = document.createElement('div');
+            newMessage.classList.add('message');
+            newMessage.innerHTML = `
+                <span class="username">${data.username}</span>
+                <span class="timestamp">${data.timestamp}</span>
+                <div>${data.message}</div>
+            `;
+            messagesDiv.appendChild(newMessage);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;  // Scroll to the bottom
+        });
+    </script>
+</body>
+</html>
